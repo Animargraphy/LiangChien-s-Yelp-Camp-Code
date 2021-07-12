@@ -53,3 +53,42 @@ app.use(methodOverride('_method'))
 npm i morgan
 
 const morgan = require('morgan');
+
+8.
+npm i ejs-mate
+
+const ejsMate = require('ejs-mate');
+
+app.engine('ejs', ejsMate)
+
+
+9.(course433)
+touch index.js (in the same folder)
+
+class AppError extends Error {
+    constructor(message, status){
+        super();
+        this.message = message;
+        this.status = status;
+
+    }
+}
+
+module.exports = AppError;
+
+(back in main js)
+const AppError = require('./AppError')
+
+function wrapAsync(fn){
+    return function(req, res, next){
+        fn(req, res, next).catch(e => next(e))
+    }
+}
+
+
+
+app.use((err, req, res, next)=>{
+    const { status = 500, message = 'something went wrong' } = err;
+    // here i give default value to the destruction
+    res.status(status).send(message)
+})

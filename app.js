@@ -1,10 +1,11 @@
 const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
+const ejsMate = require('ejs-mate');
 const methodOverride = require('method-override');
-const Campground = require("./models/campground");
+const Campground = require('./models/campground');
 
-mongoose.connect('mongodb://localhost:27017/yelp-camp',{
+mongoose.connect('mongodb://localhost:27017/yelp-camp', {
     useNewUrlParser:true,
     useCreateIndex:true,
     useUnifiedTopology:true
@@ -12,28 +13,29 @@ mongoose.connect('mongodb://localhost:27017/yelp-camp',{
 
 const db = mongoose.connection;
 // just to shorten the case like "mongoose.connection.on" into "db.on"
-db.on("error", console.error.bind(console,"connection error:"));
+db.on("error", console.error.bind(console, "connection error:"));
 // on and once method are similar to then an catch
 // In this case, if there is an error, the on callback would run which would result into printing the error in console
 db.once("open", () => {
 // It is the callback to be executed when the given event is generated. In our case, the function will be called when the connection to mongodb is open i.e. the connection is successful.
     console.log("Database connected");
-})
+});
 
 const app = express();
 
+app.engine('ejs', ejsMate)
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'))
 
 app.use(express.urlencoded({extended: true }))
 app.use(methodOverride('_method'))
 
-app.get('/',(req,res) => {
+app.get('/', (req,res) => {
     res.render('home')
 });
 
 app.get('/campgrounds', async (req,res) => {
-    const campgrounds = await Campground.find({})
+    const campgrounds = await Campground.find({});
     res.render('campgrounds/index', { campgrounds })
 });
 
@@ -41,13 +43,17 @@ app.get('/campgrounds/new', (req,res) => {
     res.render('campgrounds/new');
 })
 
-app.post('/campgrounds', async(req,res) =>{
+app.post('/campgrounds', async(req,res, next) =>{
+    try {
     const campground = new Campground(req.body.campground);
     await campground.save();
     res.redirect(`/campgrounds/${campground._id}`)
+    } catch(e){
+        next(e);
+    }
 })
 
-app.get('/campgrounds/:id', async(req,res,) => {
+app.get('/campgrounds/:id', async(req,res) => {
     const campground = await Campground.findById(req.params.id)
     res.render('campgrounds/show', { campground })
 });
@@ -59,13 +65,18 @@ app.get('/campgrounds/:id/edit', async(req,res) => {
 
 app.put('/campgrounds/:id', async(req,res) => {
     const { id } = req.params;
-    const campground = await Campground.findByIdAndUpdate(id, {...req.body.campground})
+    const campground = await Campground.findByIdAndUpdate(id, { ...req.body.campground });
+    res.redirect(`/campgrounds/${campground._id}`);
 })
 
 app.delete('/campgrounds/:id', async (req, res) => {
     const { id } = req.params;
     await Campground.findByIdAndDelete(id);
     res.redirect('/campgrounds');
+})
+
+app.use((err, req, res, next) => {
+    res.send('something went wrong!')
 })
 
 app.listen(3000, ()=>{
