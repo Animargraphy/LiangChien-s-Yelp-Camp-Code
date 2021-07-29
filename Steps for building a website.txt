@@ -62,7 +62,7 @@ const ejsMate = require('ejs-mate');
 app.engine('ejs', ejsMate)
 
 
-9.(course433)
+9.(course433 / 440)
 touch index.js (in the same folder)
 
 class AppError extends Error {
@@ -92,3 +92,87 @@ app.use((err, req, res, next)=>{
     // here i give default value to the destruction
     res.status(status).send(message)
 })
+
+
+10.Course441
+(create a folder called utils)
+(within it, create a file called ExpressError.js)
+
+class ExpressError extends Error{
+    constructor(message, statusCode){
+        super();
+        this.message = message;
+        this.statusCode = statusCode;
+    }
+
+}
+
+module.exports = ExpressError;
+
+
+
+(within the same folder, create catchAsync.js)
+
+module.exports = func => {
+    return (req, res, next) => {
+        func(req, res, next).catch(next);
+    }
+}
+
+
+(in app.js)
+const catchAsync = require('./utils/catchAsync');
+const ExpressError = require('./utils/ExpressError');
+
+app.all('*', (req, res, next) => {
+   next(new ExpressError('Page not found', 404))
+})
+
+app.use((err, req, res, next) => {
+    const {statusCode = 500, message = 'something went wrong'} = err;
+    res.status(statusCode).res.status(statusCode).render('error')
+})
+
+(within the view folder, create error.ejs)
+<% layout('layouts/boilerplate')%>
+<div class="row">
+    <div class="col-6 offset-3">
+        <div class="alert alert-danger" role="alert">
+            <h4 class="alert-heading"><%= err.message %> </h4>
+            <p><%= err.stack %></p>
+          </div>
+    </div>
+</div>
+
+
+11.Course444
+npm i joi
+const Joi = require('joi')
+
+create schemas.js
+const Joi = require('joi');
+module.exports.campgroundSchema = Joi.object({
+         campground: Joi.object({
+                title: Joi.string().required(),
+                price: Joi.number().required().min(0),
+                image: Joi.string().required(),
+                location: Joi.string().required(),
+                description: Joi.string().required(),
+            }).required()
+        });
+
+
+
+12.
+use console.log() and res.send to test the code
+
+13.npm i cookie-parser
+
+14.npm i express-session
+
+15.npm i connect-flash
+
+16.npm i bcrypt
+
+17.npm i passport passport-local passport-local-mongoose
+(Section51)

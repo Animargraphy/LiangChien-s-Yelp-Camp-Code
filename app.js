@@ -71,6 +71,8 @@ passport.deserializeUser(User.deserializeUser());
 // the above two are also built in passport-local-mongoose
 
 app.use((req, res, next) => {
+    res.locals.currentUser = req.user;
+    // this is about login logout, check Section51
     res.locals.success = req.flash('success');
     res.locals.error = req.flash('error');
     next();
