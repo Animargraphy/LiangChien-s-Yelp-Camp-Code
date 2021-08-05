@@ -1,4 +1,0 @@
-
-email 註冊那邊 即使email格式不對 也不顯示
-
-login後沒辦法回到login前的當下webpage

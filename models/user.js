@@ -7,7 +7,7 @@ const UserSchema = new Schema({
     email: {
         type: String,
         required: true,
-        unique:true
+        unique: true
         // a reminder saying that it is not considered actually a validation and it sets up an index.
     }
 });

@@ -16,19 +16,24 @@ db.once("open", () => {
     console.log("Database connected");
 });
 
-const sample = (array) => array[Math.floor(Math.random() * array.length)];
+const sample = array => array[Math.floor(Math.random() * array.length)];
 
 
 const seedDB = async () => {
     await Campground.deleteMany({});
     for (let i = 0; i < 50; i++) {
         const random1000 = Math.floor(Math.random() * 1000);
-        const price = Math.floor(Math.random()*20)+10;
+        const price = Math.floor(Math.random() * 20) + 10;
         const camp = new Campground({
             author: '610147f9e4d9200c0c2b3d84',
             location: `${cities[random1000].city}, ${cities[random1000].state}`,
             title: `${sample(descriptors)} ${sample(places)}`,
-            image: 'https://source.unsplash.com/collection/190727',
+            images: [
+                {
+                    url: 'https://res.cloudinary.com/duetpqqlt/image/upload/v1628151869/YelpCamp/godwbbvf7f6frh2xbuqt.jpg',
+                    filename: 'YelpCamp/godwbbvf7f6frh2xbuqt'
+                }
+            ],
             description: 'hihihihihi',
             price
         })
@@ -36,8 +41,6 @@ const seedDB = async () => {
     }
 }
 
-seedDB();
-
-// seedDB().then(() => {
-//     mongoose.connection.close();
-// })
+seedDB().then(() => {
+    mongoose.connection.close();
+})

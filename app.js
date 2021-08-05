@@ -1,3 +1,7 @@
+if(process.env.NODE_ENV !== "production") {
+    require('dotenv').config();
+}
+
 const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
@@ -11,10 +15,9 @@ const LocalStrategy = require('passport-local');
 const User = require('./models/user');
 
 
-const userRoutes = require('./routes/users')
+const userRoutes = require('./routes/users');
 const campgroundRoutes = require('./routes/campgrounds');
 const reviewRoutes = require('./routes/reviews');
-const { setFlagsFromString } = require('v8');
 
 mongoose.connect('mongodb://localhost:27017/yelp-camp', {
     useNewUrlParser: true,
@@ -79,7 +82,7 @@ app.use((req, res, next) => {
 })
 
 
-app.use('/', userRoutes)
+app.use('/', userRoutes);
 app.use('/campgrounds', campgroundRoutes)
 app.use('/campgrounds/:id/reviews', reviewRoutes)
 
@@ -88,7 +91,7 @@ app.get('/', (req, res) => {
 });
 
 app.all('*', (req, res, next) => {
-   next(new ExpressError('Page not found', 404))
+   next(new ExpressError('Page Not Found', 404))
 })
 // app.all stands for every single requiest. * stands for every path
 

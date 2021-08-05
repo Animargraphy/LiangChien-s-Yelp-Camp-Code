@@ -176,3 +176,17 @@ use console.log() and res.send to test the code
 
 17.npm i passport passport-local passport-local-mongoose
 (Section51)
+
+18.npm i multer
+(Section54)
+const multer  = require('multer')
+const upload = multer({ dest: 'uploads/' })
+
+19.npm i dotenv
+(Section54)
+
+20.npm i cloudinary multer-storage-cloudinary
+(Section54)
+
+21.npm i bs-custom-file-input
+Course535

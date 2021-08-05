@@ -4,13 +4,12 @@ const Campground = require('./models/campground');
 const Review = require('./models/review');
 
 module.exports.isLoggedIn = (req, res, next) => {
-    console.log('REQ.USER...', req.user);
-    if(!req.isAuthenticated()){
+    if (!req.isAuthenticated()) {
         // this is from passport-local-mongoose
         req.session.returnTo = req.originalUrl
         // After login, user dont have to view campgrounds page again, but instead return to the page before they login
-        req.flash('error', 'you must be signed in first');
-        res.redirect('/login');
+        req.flash('error', 'You must be signed in first!');
+        return res.redirect('/login');
     }
     next();
 }
@@ -21,15 +20,15 @@ module.exports.validateCampground = (req, res, next) => {
         const msg = error.details.map(el => el.message).join(',')
         throw new ExpressError(msg, 400)
     } else {
-            next();
+        next();
     }
 }
 
 module.exports.isAuthor = async (req, res, next) => {
     const { id } = req.params;
     const campground = await Campground.findById(id);
-    if (!campground.author.equals(req.user._id)){
-        req.flash('error', 'you do not have permissions to do that!')
+    if (!campground.author.equals(req.user._id)) {
+        req.flash('error', 'you do not have permission to do that!');
         return res.redirect(`/campgrounds/${id}`);
     }
     next();
@@ -38,8 +37,8 @@ module.exports.isAuthor = async (req, res, next) => {
 module.exports.isReviewAuthor = async (req, res, next) => {
     const { id, reviewId } = req.params;
     const review = await Review.findById(reviewId);
-    if (!review.author.equals(req.user._id)){
-        req.flash('error', 'you do not have permissions to do that!')
+    if (!review.author.equals(req.user._id)) {
+        req.flash('error', 'you do not have permission to do that!')
         return res.redirect(`/campgrounds/${id}`);
     }
     next();
@@ -52,6 +51,6 @@ module.exports.validateReview = (req, res, next) => {
         const msg = error.details.map(el => el.message).join(',')
         throw new ExpressError(msg, 400)
     } else {
-            next();
+        next();
     }
 }
