@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const Review = require('./review');
+const Review = require('./review')
 const Schema = mongoose.Schema;
 // just to shorten the case like "mongoose.Schema.type.asdsaf" into "Schema.type.asdsaf"
 
@@ -8,13 +8,25 @@ const ImageSchema = new Schema({
     filename: String
 });
 
-ImageSchema.virtual('thumbnail').get(function() {
+ImageSchema.virtual('thumbnail').get(function () {
     return this.url.replace('/upload', '/upload/w_200');
 });
 
 const CampgroundSchema = new Schema({
     title: String,
     images: [ImageSchema],
+    geometry: {
+        // check more at https://mongoosejs.com/docs/geojson
+        type: {
+            type: String,
+            enum: ['Point'],
+            required: true
+        },
+          coordinates: {
+            type: [Number],
+            required: true
+        }
+    },
     price: Number,
     description: String,
     location: String,
@@ -29,6 +41,8 @@ const CampgroundSchema = new Schema({
         }
     ]
 });
+
+
 
 CampgroundSchema.post('findOneAndDelete', async function (doc) {
     if (doc) {

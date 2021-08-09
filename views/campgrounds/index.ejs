@@ -3,23 +3,28 @@
 <div>
     <a href="/campgrounds/new">Add campground</a>
 </div>
-<% for (let campground of campgrounds) {%>
-       <div class="card" mb-3>
-           <div class="row">
-               <div class="col-md-4">
-                   <img class="img-fluid" alt="" src='<%=campground.images[0].url%>'>
-               </div>
-               <div class="col-mg-8">
-                   <div class="card-body">
-                       <h5 class="card-title"> <%= campground.title %> </h5>
-                       <p class="card-text"> <%= campground.description %> </p>
-                       <p class="card-text"> 
-                            <small class="text-muted"> <%= campground.location %></small>
-                        </p>
-                        <a class="btn btn-primary" href="/campgrounds/<%= campground._id %>">View <%= campground.title %></a>
-                   </div>
-               </div>
-           </div>
-       </div>
+<% for (let campground of campgrounds){%>
+<div class="card" mb-3>
+    <div class="row">
+        <div class="col-md-4">
+            <% if (campground.images.length) {%>
+            <img class="img-fluid" alt="" src="<%=campground.images[0].url%>">
+            <% }else {%>
+            <img class="img-fluid" alt=""
+                src='https://res.cloudinary.com/duetpqqlt/image/upload/v1628151869/YelpCamp/godwbbvf7f6frh2xbuqt.jpg'>
+            <% } >%
+            </div>
+            <div class="col-mg-8">
+                <div class="card-body">
+                    <h5 class="card-title"><%= campground.title %> </h5>
+                    <p class="card-text"><%= campground.description %></p>
+                    <p class="card-text"> 
+                        <small class="text-muted"> <%= campground.location %></small>
+                    </p>
+                    <a class="btn btn-primary" href="/campgrounds/<%= campground._id %>">View <%= campground.title %></a>
+            </div>
+        </div>
+    </div>
+</div>
 <% }%>
 

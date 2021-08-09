@@ -190,3 +190,6 @@ const upload = multer({ dest: 'uploads/' })
 
 21.npm i bs-custom-file-input
 Course535
+
+22.npm i @mapbox/mapbox-sdk
+Course541 Optional
